@@ -1,0 +1,89 @@
+version 1 del endpoint para actualizar datos 
+
+//######### UPDATE ###############
+// Endpoint to update a user
+// USE PATCH
+//
+
+const updateUser = async (req = request, res = response)=>{
+    //---------------------------- recibe los datos -----------------------------
+        const {id} = req.params;
+        const {
+            username, 
+            email, 
+            password, 
+            name, 
+            lastname,
+            phone_number = '',
+            role_id,
+            is_active = 1
+        } =req.body; 
+    //----------------------------
+       // Comprueba si algunos datos requeridos están ausentes y responde con un mensaje de error si es el caso
+        if (!username || !email || !password || !name || !lastname || !role_id){
+            res.status(400).json({msg: "Missing information"});
+            return;
+        }
+ 
+         let conn;
+    
+         try {
+            conn = await pool.getConnection();//Conexion a la bd
+    
+            // Realiza una consulta para obtener el usuario existente con el ID especificado
+            const [existingUser] = await conn.query(
+                usersModel.getByID, //updatByID
+                [id],
+                (err) => { if (err) throw err;});
+            // Verifica si el usuario existe en la base de datos y responde con un error 404 si no se encuentra
+            if (!existingUser) {
+                res.status(404).json({ msg: `User with id ${id} not found` });
+                return;
+            }
+    //----------------
+             // Realiza una consulta y comprueba si ya existe un usuario con el mismo nombre de usuario y 
+             //responde con un error 409 si es el caso
+            const [usernameUser] = await conn.query(
+                usersModel.getByUsername,
+                [username],
+                (err)=>{if(err)throw err;}
+            );
+            if (usernameUser){
+                res.status(409).json({msg: `User with username ${username} already exists`});
+                return;
+            }
+    //---------------
+            // Realiza una consulta y comprueba si ya existe un usuario con el mismo email y 
+            //responde con un error 409 si es el caso
+            const [emailUser] = await conn.query(
+                usersModel.getByEmail,
+                [email],
+                (err)=>{if(err)throw err;}
+            );
+            if (emailUser){
+                res.status(409).json({msg: `User with username ${email} already exists`});
+                return;
+            }
+    
+    //---------------       
+            // Aqui se realiza una consulta de actualización para modificar los datos del usuario
+            const updateResult = await conn.query(
+                usersModel.updateUser,
+                [username, email, password, name, lastname, phone_number, role_id, is_active, id]
+            );
+
+            // Verifica si la consulta de actualización afectó a alguna fila en la base de datos y responde 
+            //con un error 404 si no se realizaron modificaciones
+            if (updateResult.affectedRows === 0) {
+                res.status(404).json({msg: `Failed to modify user`})
+                return;
+            }
+            res.json({ msg: "User modified successfully" });
+            
+        } catch (error) {
+            console.error(error);
+            res.status(500).json(error);
+        } finally {
+            if (conn) conn.end();// Libera la conexión a la base de datos
+        }
+}
