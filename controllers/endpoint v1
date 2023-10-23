@@ -4,9 +4,9 @@ version 1 del endpoint para actualizar datos
 // Endpoint to update a user
 // USE PATCH
 //
-
+/*
 const updateUser = async (req = request, res = response)=>{
-    //---------------------------- recibe los datos -----------------------------
+   
         const {id} = req.params;
         const {
             username, 
@@ -19,7 +19,7 @@ const updateUser = async (req = request, res = response)=>{
             is_active = 1
         } =req.body; 
     //----------------------------
-       // Comprueba si algunos datos requeridos están ausentes y responde con un mensaje de error si es el caso
+      
         if (!username || !email || !password || !name || !lastname || !role_id){
             res.status(400).json({msg: "Missing information"});
             return;
@@ -40,9 +40,7 @@ const updateUser = async (req = request, res = response)=>{
                 res.status(404).json({ msg: `User with id ${id} not found` });
                 return;
             }
-    //----------------
-             // Realiza una consulta y comprueba si ya existe un usuario con el mismo nombre de usuario y 
-             //responde con un error 409 si es el caso
+    
             const [usernameUser] = await conn.query(
                 usersModel.getByUsername,
                 [username],
@@ -52,9 +50,7 @@ const updateUser = async (req = request, res = response)=>{
                 res.status(409).json({msg: `User with username ${username} already exists`});
                 return;
             }
-    //---------------
-            // Realiza una consulta y comprueba si ya existe un usuario con el mismo email y 
-            //responde con un error 409 si es el caso
+  
             const [emailUser] = await conn.query(
                 usersModel.getByEmail,
                 [email],
@@ -65,8 +61,7 @@ const updateUser = async (req = request, res = response)=>{
                 return;
             }
     
-    //---------------       
-            // Aqui se realiza una consulta de actualización para modificar los datos del usuario
+
             const updateResult = await conn.query(
                 usersModel.updateUser,
                 [username, email, password, name, lastname, phone_number, role_id, is_active, id]
