@@ -43,17 +43,19 @@ getByEmail:`
     WHERE
         email = ? `,
        
-        updateUser: `
-        UPDATE Users
-        SET email = ?,
-            password = ?,
-            name = ?,
-            lastname = ?,
-            phone_number = ?,
-            role_id = ?,
-            id_isactive = ?
-        WHERE username = ?
-    `,
+     updateRow: `
+    UPDATE Users
+    SET 
+        username = ?, 
+        email = ?, 
+        password = ?, 
+        name = ?, lastname = ?,
+        phone_number = ?, 
+        role_id = ?, 
+        is_active = ?
+    WHERE
+         id = ?`,
+    
     deleteRow:`
     UPDATE 
         Users
