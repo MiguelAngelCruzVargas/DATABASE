@@ -1,11 +1,10 @@
-
 const usermodels = {
     getAll: `
     SELECT 
     * 
     FROM 
     Users`,
-getByID:`
+    getByID: `
     SELECT
     *
     FROM
@@ -13,7 +12,7 @@ getByID:`
     WHERE
       id = ?
 `,
-addRow: `
+    addRow: `
     INSERT INTO
     Users (
      username,
@@ -23,11 +22,11 @@ addRow: `
      lastname,
      phone_number,
      role_id,
-     id_isactive
+     is_active
     ) 
-VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 `,
-getByUsername: `
+    getByUsername: `
     SELECT 
         id 
     FROM
@@ -35,15 +34,28 @@ getByUsername: `
     WHERE
         username = ?
         `,
-getByEmail:`
+    getByEmail: `
     SELECT
         id
     FROM
         Users
     WHERE
-        email = ? `,
-       
-     updateRow: `
+        email = ?
+    `,
+    /*
+    updateUser: `
+    UPDATE Users
+    SET username = ?, 
+    email = ?, 
+    password = ?, 
+    name = ?, lastname = ?,
+     phone_number = ?, 
+     role_id = ?, 
+     is_active = ?
+    WHERE id = ?`,
+
+*/
+updateRow: `
     UPDATE Users
     SET 
         username = ?, 
@@ -55,15 +67,16 @@ getByEmail:`
         is_active = ?
     WHERE
          id = ?`,
-    
-    deleteRow:`
+    deleteRow: `
     UPDATE 
         Users
     SET 
-        id_isactive = 0
+        is_active = 0
     WHERE 
-        id=?`,
+        id=?
+    `,
 
+    
 }
 
 module.exports = usermodels;

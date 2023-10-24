@@ -1,11 +1,12 @@
 const { Router } = require('express')
 
-const { listUsers, 
+const { 
+    listUsers, 
     listUserByID, 
     addUser,
-    deleteUser,
-   
-} = require('../controllers/users')
+    deleteUser,updateUser,
+} = require('../controllers/users');
+
 
 const router = Router();
 
@@ -16,7 +17,7 @@ router.get('/', listUsers); //obtiene la lista de  los usuarios en la  BD
 router.get('/:id', listUserByID); // obtiene la lista de  los usuarios en la  BD por ID
 //router.post('/', listUsers);
 router.put('/', addUser); //Agrega un nuevo usuario
-//router.put('/id', updateUser);
-//router.patch('/:id', updateUser);//  Actualiza un usuario por su ID
 router.delete('/:id', deleteUser);
+router.patch('/:id', updateUser);//  Actualiza un usuario por su ID
+
 module.exports = router;

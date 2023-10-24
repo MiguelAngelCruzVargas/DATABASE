@@ -1,5 +1,5 @@
 const { request, response } = require('express');
-const bcrypt = require ('bcrypt');
+const bcrypt = require('bcrypt');
 const usersModel = require('../models/users')
 const pool = require('../db');
 
@@ -104,6 +104,7 @@ const addUser = async (req = request, res = response) => {
             [username],
             (err) => { if (err) throw err; }
         );
+        const passwordHash = await bcrypt.hash(password, saltRounds);
 
         if (usernameUser) {
             res.status(409).json({ msg: `User with username ${username} already exists` });
